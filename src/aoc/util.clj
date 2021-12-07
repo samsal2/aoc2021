@@ -4,4 +4,4 @@
 
 (defn as-int [s] (Integer/parseInt s))
 
-(defn as-nums [lines] (->> lines (map util/as-int)))
+(defn as-nums [lines] (->> lines (map as-int)))
