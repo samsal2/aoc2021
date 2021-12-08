@@ -45,10 +45,6 @@
   (let [ones (count-at data at 1)]
     (if (> (- (count data) ones) ones) 0 1)))
 
-(defn co2-choose-filter-state [data at]
-  (let [ones (count-at data at 1)]
-    (if (> (- (count data) ones) ones) 0 1)))
-
 (defn oxygen-filter-unwanted [data at]
   (let [state (oxygen-choose-filter-state data at)]
     (filter-unwanted-at data at state)))
