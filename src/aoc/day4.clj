@@ -75,19 +75,13 @@
 (defn add-unmarked [board]
   (->> board (gather-unmarked) (reduce (fn [s v] (+ s (:value v))) 0)))
 
-(defn find-premult-score-or-nil-reductor [_ board]
-  (if (wins? board) (->> board (add-unmarked) (reduced)) nil))
-
-(defn find-premult-score-or-nil [boards]
-  (->> boards (reduce find-premult-score-or-nil-reductor nil)))
-
-(defn part1-reductor [[boards _] n]
-  (as-> boards $ (mark-all-boards $ n) 
-        (let [] [$ (find-premult-score-or-nil $)])
-        (let [[_ score] $] (if (nil? score) $ (->> score (* n) (reduced))))))
+(defn part1-reductor [boards n]
+  (as-> boards $ (mark-all-boards $ n) (let [] [$ (filter wins? $)])
+        (let [[next won] $] (if (= (count won) 0) next
+                    (->> won (first) (add-unmarked) (* n) (reduced))))))
                   
  (defn part1 [boards steps] 
-   (->> steps (reduce part1-reductor [boards 0])))
+   (->> steps (reduce part1-reductor boards)))
 
 (defn part2-reductor [boards n]
   (as-> boards $ (mark-all-boards $ n) (filter #(->> % (wins?) (not)) $)
