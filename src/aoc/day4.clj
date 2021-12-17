@@ -84,20 +84,11 @@
    (->> steps (reduce part1-reductor boards)))
 
 (defn part2-reductor [boards n]
-  (as-> boards $ (mark-all-boards $ n) (filter #(->> % (wins?) (not)) $)
-        (let [] (if (= (count $) 0) 
-                  ;; HACK: using boards instead of $, as per the game
-                  ;; it's imposible to have more than 1 last board,
-                  ;; this means this board minus the mark is the score.
-                  ;; Do this because well, if boards is empty after filtering,
-                  ;; which one is the board?
-                  (->> boards 
-                       (first) 
-                       (add-unmarked) 
-                       (+ (- n)) 
-                       (* n) 
-                       (reduced))
-                  $))))
+  (as-> boards $ (mark-all-boards $ n) 
+        (let [] [$ (filter #(->> % (wins?) (not)) $)])
+        (let [[remaining next] $] (if (= (count next) 0) 
+                  (->> remaining (first) (add-unmarked) (* n) (reduced))
+                  next))))
 
  (defn part2 [boards steps] 
    (->> steps (reduce part2-reductor boards)))
